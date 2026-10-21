@@ -1,0 +1,16 @@
+# Dependencies and generated builds
+**/node_modules/
+**/.expo/
+**/dist/
+**/web-build/
+
+# Local environment and credentials
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
+
+# Local generated files
+*.tsbuildinfo
+*.log
+.DS_Store

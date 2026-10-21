@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LexiGuide — Agent Harness</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="navbar" id="navbar">
+    <a href="#" class="logo" onclick="showLanding()">LexiGuide</a>
+
+    <div class="nav-links">
+        <a href="#about">About</a>
+        <a href="#why">Why LexiGuide</a>
+        <a href="#workflow">How It Works</a>
+        <a href="#applications">Applications</a>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Switch color theme">Dark mode</button>
+        <button onclick="launchApp()">Launch <span>→</span></button>
+    </div>
+
+    <button class="mobile-menu" onclick="toggleMenu()">☰</button>
+</nav>
+
+<main id="landing">
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="eyebrow">
+                LEXIGUIDE / DEVELOPER TOOL
+            </div>
+
+            <h1>LexiGuide</h1>
+
+            <div class="typewriter">
+                <span id="typewriter"></span>
+            </div>
+
+            <p>
+                A context-aware agent harness that detects lexical problems,
+                understands their surrounding code, proposes corrections,
+                and validates the repaired source.
+            </p>
+
+            <div class="hero-actions">
+                <button class="primary-btn" onclick="launchApp()">
+                    Launch LexiGuide
+                    <span>↗</span>
+                </button>
+
+                <a href="#about" class="secondary-btn">
+                    Explore project
+                    <span>↓</span>
+                </a>
+            </div>
+
+            <div class="hero-meta">
+                <div>
+                    <strong>01</strong>
+                    <span>Context Aware</span>
+                </div>
+                <div>
+                    <strong>02</strong>
+                    <span>Agent Assisted</span>
+                </div>
+                <div>
+                    <strong>03</strong>
+                    <span>Self Validating</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="info-section reveal" id="about">
+        <div class="section-number">01</div>
+
+        <div class="section-content">
+            <span class="section-label">ABOUT LEXIGUIDE</span>
+            <h2>Errors are easier to fix<br><em>when they are understood.</em></h2>
+
+            <p>
+                Traditional lexical analyzers are excellent at identifying
+                invalid tokens, but their feedback is often limited to a
+                technical error message. LexiGuide adds a reasoning layer
+                around lexical analysis.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <span>01</span>
+                    <h3>Detect</h3>
+                    <p>Locate suspicious tokens and lexical inconsistencies.</p>
+                </div>
+
+                <div class="feature-card">
+                    <span>02</span>
+                    <h3>Understand</h3>
+                    <p>Inspect surrounding code to understand the context.</p>
+                </div>
+
+                <div class="feature-card">
+                    <span>03</span>
+                    <h3>Repair</h3>
+                    <p>Generate a correction instead of only reporting failure.</p>
+                </div>
+
+                <div class="feature-card">
+                    <span>04</span>
+                    <h3>Validate</h3>
+                    <p>Run the analysis again after the correction.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="info-section split-section reveal" id="why">
+        <div class="section-number">02</div>
+
+        <div class="section-content">
+            <span class="section-label">WHY LEXIGUIDE</span>
+            <h2>From an error message<br><em>to an explanation.</em></h2>
+
+            <div class="comparison">
+                <div class="comparison-card old">
+                    <span>TRADITIONAL</span>
+                    <h3>Invalid Token</h3>
+                    <p>Line 14: unexpected character.</p>
+                </div>
+
+                <div class="comparison-arrow">→</div>
+
+                <div class="comparison-card new">
+                    <span>LEXIGUIDE</span>
+                    <h3>Contextual Explanation</h3>
+                    <p>
+                        The character appears inside an identifier where it is
+                        not normally permitted. Here is the affected token,
+                        why it is invalid, and a suggested correction.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="info-section reveal" id="workflow">
+        <div class="section-number">03</div>
+
+        <div class="section-content">
+            <span class="section-label">AGENT WORKFLOW</span>
+            <h2>A continuous loop of<br><em>reasoning and validation.</em></h2>
+
+            <div class="workflow">
+                <div class="workflow-step">
+                    <div class="step-circle">01</div>
+                    <div>
+                        <h3>Source Inspection</h3>
+                        <p>Read and tokenize the submitted source code.</p>
+                    </div>
+                </div>
+
+                <div class="workflow-line"></div>
+
+                <div class="workflow-step">
+                    <div class="step-circle">02</div>
+                    <div>
+                        <h3>Error Detection</h3>
+                        <p>Identify suspicious lexical patterns and locations.</p>
+                    </div>
+                </div>
+
+                <div class="workflow-line"></div>
+
+                <div class="workflow-step">
+                    <div class="step-circle">03</div>
+                    <div>
+                        <h3>Context Reasoning</h3>
+                        <p>Inspect nearby lines and infer the intended token.</p>
+                    </div>
+                </div>
+
+                <div class="workflow-line"></div>
+
+                <div class="workflow-step">
+                    <div class="step-circle">04</div>
+                    <div>
+                        <h3>Correction & Validation</h3>
+                        <p>Apply the correction and analyze the source again.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="info-section reveal" id="applications">
+        <div class="section-number">04</div>
+
+        <div class="section-content">
+            <span class="section-label">APPLICATIONS</span>
+            <h2>Built beyond one<br><em>programming language.</em></h2>
+
+            <div class="application-grid">
+                <div class="application-card">
+                    <div class="app-icon">⌘</div>
+                    <h3>Intelligent IDEs</h3>
+                    <p>Give developers contextual lexical feedback while coding.</p>
+                </div>
+
+                <div class="application-card">
+                    <div class="app-icon">◈</div>
+                    <h3>Programming Education</h3>
+                    <p>Explain mistakes instead of simply marking code wrong.</p>
+                </div>
+
+                <div class="application-card">
+                    <div class="app-icon">⌁</div>
+                    <h3>Online Judges</h3>
+                    <p>Provide more useful feedback when submitted code fails.</p>
+                </div>
+
+                <div class="application-card">
+                    <div class="app-icon">✦</div>
+                    <h3>Automated Repair</h3>
+                    <p>Connect lexical analysis with intelligent code repair.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="launch-section">
+        <div>
+            <span>READY TO EXPLORE?</span>
+            <h2>Analyze your source code.</h2>
+        </div>
+
+        <button class="primary-btn" onclick="launchApp()">
+            Open Agent Harness
+            <span>↗</span>
+        </button>
+    </section>
+
+</main>
+
+<main id="app" class="app-container">
+
+    <section class="app-header">
+        <div>
+            <span class="section-label">LEXIGUIDE / AGENT HARNESS</span>
+            <h1>Analyze your source code.</h1>
+            <p>
+                Detect lexical anomalies, understand their context,
+                generate corrections and validate the result.
+            </p>
+        </div>
+
+        <div class="app-header-actions">
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Switch color theme">Dark mode</button>
+            <div class="agent-status">
+                <span class="status-dot"></span>
+                Agent Online
+            </div>
+        </div>
+    </section>
+
+    <section class="control-bar">
+        <div class="language-control">
+            <label for="language">LANGUAGE</label>
+            <select id="language">
+                <option value="auto">Auto Detect</option>
+                <option value="c">C</option>
+                <option value="cpp">C++</option>
+                <option value="java">Java</option>
+                <option value="python">Python</option>
+                <option value="javascript">JavaScript</option>
+                <option value="typescript">TypeScript</option>
+                <option value="csharp">C#</option>
+                <option value="go">Go</option>
+                <option value="rust">Rust</option>
+                <option value="php">PHP</option>
+                <option value="generic">Generic / Other</option>
+            </select>
+        </div>
+
+        <div class="editor-actions">
+            <button onclick="loadExample()">Load Example</button>
+            <button onclick="copySource()">Copy</button>
+            <button onclick="downloadSource()">Download</button>
+            <button onclick="resetCode()">Reset</button>
+            <button class="analyze-btn" onclick="analyzeCode()" title="Shortcut: Ctrl+Enter">Analyze Source ↗</button>
+        </div>
+    </section>
+
+    <section class="workspace">
+
+        <div class="editor-panel panel">
+            <div class="panel-header">
+                <div>
+                    <span class="panel-label">SOURCE</span>
+                    <strong>Source Code</strong>
+                </div>
+
+                <div class="editor-info">
+                    <span id="languageBadge">AUTO</span>
+                    <span id="charCount">0 chars</span>
+                </div>
+            </div>
+
+            <div class="editor">
+                <div class="line-numbers" id="lineNumbers"></div>
+                <textarea id="codeEditor" spellcheck="false" oninput="updateEditor()"></textarea>
+            </div>
+
+            <div class="editor-footer">
+                <span id="lineCount">0 lines</span>
+                <span id="draftStatus">Draft saved locally</span>
+            </div>
+        </div>
+
+        <div class="analysis-panel panel">
+
+            <div class="panel-header">
+                <div>
+                    <span class="panel-label">ANALYSIS</span>
+                    <strong>Source Intelligence</strong>
+                </div>
+
+                <span class="analysis-state" id="analysisState">Ready</span>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric">
+                    <span>LANGUAGE</span>
+                    <strong id="metricLanguage">—</strong>
+                </div>
+
+                <div class="metric">
+                    <span>LINES</span>
+                    <strong id="metricLines">—</strong>
+                </div>
+
+                <div class="metric">
+                    <span>TOKENS</span>
+                    <strong id="metricTokens">—</strong>
+                </div>
+
+                <div class="metric">
+                    <span>ERRORS</span>
+                    <strong id="metricErrors">—</strong>
+                </div>
+
+                <div class="metric">
+                    <span>WARNINGS</span>
+                    <strong id="metricWarnings">—</strong>
+                </div>
+
+                <div class="metric">
+                    <span>COMPLEXITY</span>
+                    <strong id="metricComplexity">—</strong>
+                </div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="subsection-title">
+                    <span>DETECTED ISSUES</span>
+                    <span id="issueCount">0</span>
+                </div>
+
+                <div id="issuesList" class="issues-list">
+                    <div class="empty-state">
+                        <div class="empty-icon">⌁</div>
+                        <p>Run the analyzer to inspect your source.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="subsection-title">
+                    <span>CONTEXT ANALYSIS</span>
+                    <span class="live-label">LIVE</span>
+                </div>
+
+                <div id="contextBox" class="context-box">
+                    <div class="context-icon">◎</div>
+                    <div>
+                        <strong>Waiting for source analysis</strong>
+                        <p>
+                            LexiGuide will inspect surrounding lines,
+                            token patterns and probable intent.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="subsection-title">
+                    <span>AGENT CORRECTION</span>
+                    <span id="correctionStatus">PENDING</span>
+                </div>
+
+                <div id="correctionBox" class="correction-box">
+                    <p>
+                        No correction has been generated yet.
+                    </p>
+                </div>
+
+                <button id="applyButton" class="apply-btn" onclick="applyCorrection()" disabled>
+                    Apply Agent Correction
+                    <span>↗</span>
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="agent-panel panel">
+        <div class="panel-header">
+            <div>
+                <span class="panel-label">AGENT HARNESS</span>
+                <strong>Reasoning Pipeline</strong>
+            </div>
+
+            <span id="pipelineState">IDLE</span>
+        </div>
+
+        <div class="pipeline">
+
+            <div class="pipeline-step" id="pipeline-detect">
+                <div class="pipeline-icon">⌕</div>
+                <div>
+                    <strong>Detection</strong>
+                    <span>Inspect tokens</span>
+                </div>
+            </div>
+
+            <div class="pipeline-connector"></div>
+
+            <div class="pipeline-step" id="pipeline-context">
+                <div class="pipeline-icon">◎</div>
+                <div>
+                    <strong>Context</strong>
+                    <span>Understand intent</span>
+                </div>
+            </div>
+
+            <div class="pipeline-connector"></div>
+
+            <div class="pipeline-step" id="pipeline-correction">
+                <div class="pipeline-icon">✦</div>
+                <div>
+                    <strong>Correction</strong>
+                    <span>Generate repair</span>
+                </div>
+            </div>
+
+            <div class="pipeline-connector"></div>
+
+            <div class="pipeline-step" id="pipeline-validation">
+                <div class="pipeline-icon">✓</div>
+                <div>
+                    <strong>Validation</strong>
+                    <span>Verify result</span>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="activity-log" id="activityLog">
+            <div class="log-item">
+                <span class="log-dot"></span>
+                <span>Agent harness initialized.</span>
+                <time>now</time>
+            </div>
+        </div>
+    </section>
+
+    <section class="compiler-panel panel" aria-labelledby="compilerHeading">
+        <div class="panel-header compiler-panel-header">
+            <div>
+                <span class="panel-label">SOURCE WORKBENCH</span>
+                <strong id="compilerHeading">Compiler phases &amp; parse tree</strong>
+            </div>
+            <span id="compilerStatus" class="compiler-status">WAITING FOR ANALYSIS</span>
+        </div>
+
+        <div id="compilerResult" class="compiler-result" aria-live="polite">
+            <p>Analyze your source to see its structure and compiler phase preview.</p>
+        </div>
+
+        <button id="repairAndBuildButton" class="repair-build-btn" onclick="applyCorrection()" disabled hidden>
+            Click here to correct the code
+            <span>↗</span>
+        </button>
+
+        <div id="compilerDetails" class="compiler-details" hidden>
+            <div class="compiler-phases-wrap">
+                <div class="compiler-section-heading">
+                    <h3>Compiler flow</h3>
+                    <span>Select a stage to inspect its status and purpose</span>
+                </div>
+                <div id="compilerPhases" class="compiler-phases"></div>
+                <div id="phaseDetails" class="phase-details" aria-live="polite">
+                    Select a compiler stage to view its details.
+                </div>
+            </div>
+
+            <div class="parse-tree-wrap">
+                <div class="compiler-section-heading">
+                    <h3>Parse tree</h3>
+                    <span>Hierarchical source structure</span>
+                </div>
+                <div id="parseTree" class="parse-tree" aria-label="Source structure tree"></div>
+                <p class="tree-note">This lightweight preview is not a language-specific compiler or semantic validator.</p>
+            </div>
+        </div>
+    </section>
+
+    <button class="back-button" onclick="showLanding()">
+        ← Back to LexiGuide
+    </button>
+
+</main>
+
+<div class="ai-orb-wrapper" id="aiOrb">
+    <div class="orb-glow"></div>
+    <div class="ai-orb">
+        <div class="orb-highlight"></div>
+        <div class="orb-core"></div>
+    </div>
+    <div class="orb-label">Lexi AI</div>
+</div>
+
+<div class="ai-panel" id="aiPanel">
+
+    <div class="ai-header">
+        <div class="ai-title">
+            <div class="mini-orb">
+                <div></div>
+            </div>
+
+            <div>
+                <strong>Lexi AI</strong>
+                <span>Agent Assistant</span>
+            </div>
+        </div>
+
+        <button onclick="toggleAI()">×</button>
+    </div>
+
+    <div class="ai-messages" id="aiMessages">
+        <div class="ai-message">
+            <span class="message-tag">LEXI AI</span>
+            <p>
+                Hello. I can explain detected lexical issues,
+                analyze your source context, and guide you through
+                the correction process.
+            </p>
+        </div>
+    </div>
+
+    <div class="ai-suggestions">
+        <button onclick="askAI('Explain the detected error')">Explain error</button>
+        <button onclick="askAI('Why is this token invalid?')">Why invalid?</button>
+        <button onclick="askAI('What should I change?')">What should I change?</button>
+    </div>
+
+    <div class="ai-input">
+        <input
+            id="aiInput"
+            type="text"
+            placeholder="Ask Lexi AI..."
+            onkeydown="handleAIKey(event)"
+        >
+        <button onclick="sendAIMessage()">↑</button>
+    </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
