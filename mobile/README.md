@@ -1,6 +1,6 @@
-# LexiGuide mobile
+# LexiCura mobile
 
-LexiGuide mobile is the Expo Go version of the LexiGuide source analyzer. It keeps the website intact and provides a native phone interface for editing, analyzing, correcting, and sharing source code.
+LexiCura mobile is the Expo Go version of the LexiCura source analyzer. It keeps the website intact and provides a native phone interface for editing, analyzing, correcting, and sharing source code.
 
 ## Run in Expo Go
 
@@ -24,4 +24,4 @@ If the local network blocks device-to-device connections, run `npx expo start --
 - Compiler stage flow, selectable phase explanations, and a nested syntax-structure preview.
 - Local Lexi AI helper with contextual explanations and suggested prompts.
 
-LexiGuide runs lightweight lexical and delimiter checks in the app. Its parse tree is a structural preview; full language grammar, semantic checks, optimization, and code generation require a language-specific compiler.
+LexiCura runs lightweight lexical and delimiter checks in the app. Its parse tree is a structural preview; full language grammar, semantic checks, optimization, and code generation require a language-specific compiler.

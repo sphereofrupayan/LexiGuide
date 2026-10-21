@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "LexiGuide",
-    "slug": "lexiguide-mobile",
-    "scheme": "lexiguide",
+    "name": "LexiCura",
+    "slug": "lexicura-mobile",
+    "scheme": "lexicura",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

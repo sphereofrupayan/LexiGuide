@@ -38,7 +38,7 @@ int main() {
 
     java: `public class Main {
     public static void main(String[] args) {
-        String user@name = "LexiGuide";
+        String user@name = "LexiCura";
         System.out.println(user@name);
     }
 }`,
@@ -63,13 +63,13 @@ calculateTotal(100, 18);`,
     return message;
 }
 
-console.log(greet("LexiGuide"));`,
+console.log(greet("LexiCura"));`,
 
     csharp: `using System;
 
 class Program {
     static void Main() {
-        string user@name = "LexiGuide";
+        string user@name = "LexiCura";
         Console.WriteLine(user@name);
     }
 }`,
@@ -79,17 +79,17 @@ class Program {
 import "fmt"
 
 func main() {
-    user@name := "LexiGuide"
+    user@name := "LexiCura"
     fmt.Println(user@name)
 }`,
 
     rust: `fn main() {
-    let user@name = "LexiGuide";
+    let user@name = "LexiCura";
     println!("{}", user@name);
 }`,
 
     php: `<?php
-$name = "LexiGuide";
+$name = "LexiCura";
 echo "Hello " . $name@;
 ?>`,
 
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.documentElement.dataset.theme = savedTheme;
         }
     } catch (error) {
-        console.error("Unable to restore LexiGuide preferences.", error);
+        console.error("Unable to restore LexiCura preferences.", error);
         showToast("Could not restore saved preferences");
     }
     updateThemeButtons();
@@ -211,7 +211,7 @@ function saveDraft() {
         document.getElementById("draftStatus").textContent = "Draft saved locally";
     } catch (error) {
         document.getElementById("draftStatus").textContent = "Draft not saved";
-        console.error("Unable to save the LexiGuide draft.", error);
+        console.error("Unable to save the LexiCura draft.", error);
     }
 }
 
@@ -226,7 +226,7 @@ function toggleTheme() {
     try {
         localStorage.setItem("lexiguide-theme", nextTheme);
     } catch (error) {
-        console.error("Unable to save the LexiGuide theme preference.", error);
+        console.error("Unable to save the LexiCura theme preference.", error);
         showToast("Theme changed, but could not be saved");
         return;
     }
@@ -281,7 +281,7 @@ function downloadSource() {
     const link = document.createElement("a");
 
     link.href = url;
-    link.download = `lexiguide-source.${extension}`;
+    link.download = `lexicura-source.${extension}`;
     link.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
     showToast("Source file downloaded");
@@ -781,7 +781,7 @@ function renderCompilerPreview(code) {
             name: "Semantic analysis",
             key: "semantic",
             detail: "Requires a language-specific compiler",
-            description: "A real compiler checks meaning, including declarations, types, scopes and valid operations. LexiGuide does not run this phase."
+            description: "A real compiler checks meaning, including declarations, types, scopes and valid operations. LexiCura does not run this phase."
         },
         {
             name: "Intermediate code generation",
@@ -799,7 +799,7 @@ function renderCompilerPreview(code) {
             name: "Target code generation",
             key: "generation",
             detail: "Requires a compiler backend",
-            description: "A target-specific backend converts the intermediate form into machine code, bytecode or another output. LexiGuide has no backend."
+            description: "A target-specific backend converts the intermediate form into machine code, bytecode or another output. LexiCura has no backend."
         }
     ];
 
@@ -1004,7 +1004,7 @@ function finishAnalysis(language, code) {
             <div>
                 <strong>No lexical anomalies detected</strong>
                 <p>
-                    The current source passed LexiGuide's lexical checks.
+                    The current source passed LexiCura's lexical checks.
                     The source may still contain syntactic or semantic issues
                     that require a language compiler or interpreter.
                 </p>
@@ -1075,7 +1075,7 @@ function renderContext(issue) {
         <div>
             <strong>Issue localized around line ${issue.line}</strong>
             <p>
-                LexiGuide inspected the nearby source context to determine
+                LexiCura inspected the nearby source context to determine
                 whether the token is likely intentional or anomalous.
             </p>
             <div class="correction-box" style="margin-top:10px;">
@@ -1239,7 +1239,7 @@ function clearAnalysis() {
         <div>
             <strong>Waiting for source analysis</strong>
             <p>
-                LexiGuide will inspect surrounding lines,
+                LexiCura will inspect surrounding lines,
                 token patterns and probable intent.
             </p>
         </div>
@@ -1295,7 +1295,7 @@ function generateAIResponse(question) {
     const issue = selectedIssue || detectedIssues[0];
 
     if (lower.includes("why")) {
-        return `The token "${issue.token}" was flagged on line ${issue.line} because its character pattern does not match a normal lexical token for the detected source. LexiGuide then examines the surrounding context before suggesting a correction.`;
+        return `The token "${issue.token}" was flagged on line ${issue.line} because its character pattern does not match a normal lexical token for the detected source. LexiCura then examines the surrounding context before suggesting a correction.`;
     }
 
     if (lower.includes("change") || lower.includes("fix")) {

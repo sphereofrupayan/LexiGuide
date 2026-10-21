@@ -1,6 +1,6 @@
-# LexiGuide
+# LexiCura
 
-LexiGuide is a source-code analyzer with a browser-based interface and an Expo mobile app.
+LexiCura is a source-code analyzer with a browser-based interface and an Expo mobile app.
 
 ## Browser app
 

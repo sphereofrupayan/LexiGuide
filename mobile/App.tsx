@@ -212,7 +212,7 @@ export default function App() {
           setThemeName(storedTheme);
         }
       } catch (error) {
-        console.error("Unable to restore saved LexiGuide data.", error);
+        console.error("Unable to restore saved LexiCura data.", error);
         Alert.alert("Storage unavailable", "Your saved draft could not be restored.");
       } finally {
         if (mounted) setReady(true);
@@ -235,7 +235,7 @@ export default function App() {
         .then(() => setSaved(true))
         .catch((error: unknown) => {
           setSaved(false);
-          console.error("Unable to save the LexiGuide draft.", error);
+          console.error("Unable to save the LexiCura draft.", error);
         });
     }, 350);
     return () => clearTimeout(timer);
@@ -317,7 +317,7 @@ export default function App() {
         "c++": "cpp",
       };
       const fileExtension = extension[languageId] ?? "txt";
-      const fileUri = `${FileSystem.cacheDirectory}lexiguide-source.${fileExtension}`;
+      const fileUri = `${FileSystem.cacheDirectory}lexicura-source.${fileExtension}`;
       await FileSystem.writeAsStringAsync(fileUri, code);
       if (!(await Sharing.isAvailableAsync())) {
         Alert.alert("Sharing unavailable", "This device cannot open the share sheet for source files.");
@@ -325,12 +325,12 @@ export default function App() {
       }
       await Sharing.shareAsync(fileUri, {
         mimeType: "text/plain",
-        dialogTitle: "Share LexiGuide source",
+        dialogTitle: "Share LexiCura source",
         UTI: "public.plain-text",
       });
     } catch (error) {
       console.error("Unable to export the source.", error);
-      Alert.alert("Export failed", "LexiGuide could not prepare the source file.");
+      Alert.alert("Export failed", "LexiCura could not prepare the source file.");
     } finally {
       setBusy(false);
     }
@@ -552,7 +552,7 @@ export default function App() {
               <View style={styles.flexOne}>
                 <Text style={[styles.cardTitle, { color: palette.text }]}>No detected issues</Text>
                 <Text style={[styles.bodyCopy, { color: palette.muted }]}>
-                  LexiGuide checked lexical patterns and balanced delimiters. Use a language compiler for full grammar and semantic checks.
+                  LexiCura checked lexical patterns and balanced delimiters. Use a language compiler for full grammar and semantic checks.
                 </Text>
               </View>
             </View>,
@@ -834,7 +834,7 @@ export default function App() {
               <Ionicons name="sparkles" size={17} color="#FFFFFF" />
             </View>
             <View>
-              <Text style={[styles.brandName, { color: palette.text }]}>LexiGuide</Text>
+              <Text style={[styles.brandName, { color: palette.text }]}>LexiCura</Text>
               <Text style={[styles.brandCaption, { color: palette.muted }]}>SOURCE INTELLIGENCE</Text>
             </View>
           </Pressable>

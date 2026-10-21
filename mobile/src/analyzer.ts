@@ -60,13 +60,13 @@ int main() {
 using namespace std;
 
 int main() {
-    string user@name = "LexiGuide";
+    string user@name = "LexiCura";
     cout << user@name;
     return 0;
 }`,
   java: `public class Main {
     public static void main(String[] args) {
-        String user@name = "LexiGuide";
+        String user@name = "LexiCura";
         System.out.println(user@name);
     }
 }`,
@@ -88,12 +88,12 @@ calculateTotal(100, 18);`,
     return message;
 }
 
-console.log(greet("LexiGuide"));`,
+console.log(greet("LexiCura"));`,
   csharp: `using System;
 
 class Program {
     static void Main() {
-        string user@name = "LexiGuide";
+        string user@name = "LexiCura";
         Console.WriteLine(user@name);
     }
 }`,
@@ -102,15 +102,15 @@ class Program {
 import "fmt"
 
 func main() {
-    user@name := "LexiGuide"
+    user@name := "LexiCura"
     fmt.Println(user@name)
 }`,
   rust: `fn main() {
-    let user@name = "LexiGuide";
+    let user@name = "LexiCura";
     println!("{}", user@name);
 }`,
   php: `<?php
-$name = "LexiGuide";
+$name = "LexiCura";
 echo "Hello " . $name@;
 ?>`,
   generic: `function process(data) {
@@ -503,7 +503,7 @@ export function getCompilerPhases(result: AnalysisResult): Phase[] {
       name: "Semantic analysis",
       key: "semantic",
       detail: "Requires a language-specific compiler",
-      description: "A real compiler checks declarations, types, scope and valid operations. LexiGuide does not run this phase.",
+      description: "A real compiler checks declarations, types, scope and valid operations. LexiCura does not run this phase.",
     },
     {
       name: "Intermediate code generation",
@@ -521,7 +521,7 @@ export function getCompilerPhases(result: AnalysisResult): Phase[] {
       name: "Target code generation",
       key: "generation",
       detail: "Requires a compiler backend",
-      description: "A target backend emits machine code, bytecode or other output. LexiGuide does not include a compiler backend.",
+      description: "A target backend emits machine code, bytecode or other output. LexiCura does not include a compiler backend.",
     },
   ];
 
@@ -542,7 +542,7 @@ export function getCompilerPhases(result: AnalysisResult): Phase[] {
 export function makeAssistantReply(question: string, result: AnalysisResult | null, selectedIssue: Issue | null): string {
   if (!result) return "Paste or load source code and run analysis first. I can then explain issues, fixes, and compiler stages.";
   if (!result.issues.length) {
-    return "The current source passed LexiGuide's lexical and delimiter checks. The parse tree is a structural preview; a language compiler is still needed to validate full syntax and meaning.";
+    return "The current source passed LexiCura's lexical and delimiter checks. The parse tree is a structural preview; a language compiler is still needed to validate full syntax and meaning.";
   }
   const issue = selectedIssue ?? result.issues[0];
   const lower = question.toLowerCase();
