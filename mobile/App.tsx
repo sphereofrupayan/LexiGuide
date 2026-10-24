@@ -349,12 +349,32 @@ export default function App() {
 
   const applyAllSuggestedFixes = () => {
     if (!analysis || analysis.issues.length === 0) return;
-    const updatedCode = applySuggestedCorrections(code, analysis.issues);
-    if (updatedCode === null) {
-      setToast("Some suggestions overlap or no longer match the source");
+    let updatedCode = code;
+    let issuesToFix = analysis.issues;
+    let appliedCount = 0;
+
+    for (let pass = 0; pass < 10 && issuesToFix.length; pass += 1) {
+      const nextCode = applySuggestedCorrections(updatedCode, issuesToFix);
+      if (nextCode === null) break;
+
+      updatedCode = nextCode;
+      appliedCount += issuesToFix.length;
+      issuesToFix = analyzeSource(updatedCode, language).issues;
+    }
+
+    if (updatedCode === code) {
+      setToast("No safe suggested correction could be applied");
       return;
     }
-    updateAfterCorrection(updatedCode, `${analysis.issues.length} corrections applied`);
+
+    setCode(updatedCode);
+    const result = analyzeSource(updatedCode, language);
+    setAnalysis(result);
+    setSelectedIssueId(result.issues[0]?.id ?? null);
+    setSelectedPhase(0);
+    setToast(issuesToFix.length
+      ? `${appliedCount} corrections applied — ${issuesToFix.length} issue${issuesToFix.length === 1 ? "" : "s"} still need review`
+      : `${appliedCount} corrections applied and checks passed`);
   };
 
   const updateAfterCorrection = (updatedCode: string, successMessage: string) => {

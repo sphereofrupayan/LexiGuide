@@ -1140,13 +1140,28 @@ function applyCorrection() {
 }
 
 function applyAllCorrections() {
-    if (detectedIssues.length <= 2 || !correctionReady) {
+    if (!detectedIssues.length || !correctionReady) {
         return;
     }
 
-    const correctedSource = applyIssueCorrections(editor.value, detectedIssues);
-    if (correctedSource === null) {
-        showToast("Some suggestions overlap or no longer match the source");
+    let correctedSource = editor.value;
+    let issuesToFix = detectedIssues;
+    let appliedCount = 0;
+
+    for (let pass = 0; pass < 10 && issuesToFix.length; pass += 1) {
+        const nextSource = applyIssueCorrections(correctedSource, issuesToFix);
+        if (nextSource === null) break;
+
+        correctedSource = nextSource;
+        appliedCount += issuesToFix.length;
+        issuesToFix = [
+            ...detectLexicalIssues(correctedSource),
+            ...checkStructure(correctedSource)
+        ];
+    }
+
+    if (correctedSource === editor.value) {
+        showToast("No safe suggested correction could be applied");
         return;
     }
 
@@ -1155,8 +1170,10 @@ function applyAllCorrections() {
     correctionReady = false;
     document.getElementById("applyButton").disabled = true;
     document.getElementById("applyAllButton").disabled = true;
-    addLog(`${detectedIssues.length} suggested corrections applied across the source.`);
-    showToast("All suggested corrections applied — rechecking source");
+    addLog(`${appliedCount} suggested correction${appliedCount === 1 ? "" : "s"} applied across the source.`);
+    showToast(issuesToFix.length
+        ? `${appliedCount} corrections applied — ${issuesToFix.length} issue${issuesToFix.length === 1 ? "" : "s"} still need review`
+        : `${appliedCount} corrections applied — rechecking source`);
 
     setTimeout(() => {
         analyzeCode();
