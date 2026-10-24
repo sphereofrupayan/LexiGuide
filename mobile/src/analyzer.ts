@@ -244,15 +244,14 @@ function checkLexicalIssues(code: string): Issue[] {
         }
       }
 
-      const duplicate = codeBeforeComment.match(/([;,:+\-*\/=])\1+/);
-      if (duplicate && duplicate.index !== undefined) {
+      for (const duplicate of codeBeforeComment.matchAll(/([;,:+\-*\/=])\1+/g)) {
         addIssue(issues, {
           line: lineIndex + 1,
           type: "SUSPICIOUS TOKEN",
           message: `Repeated operator "${duplicate[0]}" may be malformed.`,
           token: duplicate[0],
           replacement: duplicate[1],
-          offset: absoluteOffset + duplicate.index,
+          offset: absoluteOffset + (duplicate.index ?? 0),
           category: "lexical",
         });
       }
@@ -379,6 +378,46 @@ export function analyzeSource(code: string, languageId: LanguageId): AnalysisRes
     complexity: branching <= 4 ? "Low" : branching <= 9 ? "Medium" : "High",
     issues,
   };
+}
+
+export function applySuggestedCorrections(source: string, issues: Issue[]): string | null {
+  const edits: Array<{ offset: number; token: string; replacement: string }> = [];
+  let appended = "";
+
+  for (const issue of issues) {
+    if (issue.append) {
+      appended += issue.replacement;
+      continue;
+    }
+
+    if (
+      !Number.isInteger(issue.offset) ||
+      issue.offset < 0 ||
+      source.slice(issue.offset, issue.offset + issue.token.length) !== issue.token
+    ) {
+      return null;
+    }
+    edits.push({
+      offset: issue.offset,
+      token: issue.token,
+      replacement: issue.replacement,
+    });
+  }
+
+  edits.sort((first, second) => first.offset - second.offset);
+  for (let index = 1; index < edits.length; index += 1) {
+    if (edits[index].offset < edits[index - 1].offset + edits[index - 1].token.length) {
+      return null;
+    }
+  }
+
+  let corrected = source;
+  for (const edit of edits.reverse()) {
+    corrected = `${corrected.slice(0, edit.offset)}${edit.replacement}${corrected.slice(edit.offset + edit.token.length)}`;
+  }
+  corrected += appended;
+
+  return corrected === source ? null : corrected;
 }
 
 function classifyStatement(tokens: string[], hasCall: boolean): string {

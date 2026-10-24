@@ -393,7 +393,7 @@
 
             <div class="analysis-section">
                 <div class="subsection-title">
-                    <span>AGENT CORRECTION</span>
+                    <span>LINE-BY-LINE CORRECTION</span>
                     <span id="correctionStatus">PENDING</span>
                 </div>
 
@@ -404,9 +404,16 @@
                 </div>
 
                 <button id="applyButton" class="apply-btn" onclick="applyCorrection()" disabled>
-                    Apply Agent Correction
+                    Apply This Line &amp; Recheck
                     <span>↗</span>
                 </button>
+                <button id="applyAllButton" class="apply-all-btn" onclick="applyAllCorrections()" disabled hidden>
+                    Correct Entire Code
+                    <span>↗</span>
+                </button>
+                <p id="batchCorrectionHint" class="batch-correction-hint" hidden>
+                    Apply all suggested fixes in one pass, then recheck the source.
+                </p>
             </div>
 
         </div>

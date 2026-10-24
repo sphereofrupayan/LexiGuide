@@ -384,10 +384,18 @@ function normalizeLanguage(language) {
 
 function detectLexicalIssues(code) {
     const lines = code.split("\n");
+    const lineOffsets = [];
+    let sourceOffset = 0;
     const issues = [];
+
+    lines.forEach(line => {
+        lineOffsets.push(sourceOffset);
+        sourceOffset += line.length + 1;
+    });
 
     lines.forEach((line, index) => {
         const lineNumber = index + 1;
+        const lineOffset = lineOffsets[index];
 
         if (!line.trim()) {
             return;
@@ -400,79 +408,69 @@ function detectLexicalIssues(code) {
                 line: lineNumber,
                 type: "UNTERMINATED STRING",
                 message: "A string or character literal appears to remain open.",
-                token: stringMatches[0].trim(),
-                replacement: getStringReplacement(line)
+                token: line,
+                replacement: getStringReplacement(line),
+                offset: lineOffset
             });
         }
 
-        const identifierMatch = line.match(/\b[A-Za-z_][A-Za-z0-9_]*@[A-Za-z_][A-Za-z0-9_]*\b/);
-
-        if (identifierMatch) {
+        for (const identifierMatch of line.matchAll(/\b[A-Za-z_][A-Za-z0-9_]*@[A-Za-z_][A-Za-z0-9_]*\b/g)) {
             const token = identifierMatch[0];
-
             issues.push({
                 line: lineNumber,
                 type: "INVALID IDENTIFIER",
                 message: `The identifier "${token}" contains an unsupported character.`,
                 token,
-                replacement: token.replace("@", "_")
+                replacement: token.replace("@", "_"),
+                offset: lineOffset + identifierMatch.index
             });
         }
 
-        const trailingAt = line.match(/\b[A-Za-z_][A-Za-z0-9_]*@\b/);
-
-        if (trailingAt) {
+        for (const trailingAt of line.matchAll(/\b[A-Za-z_][A-Za-z0-9_]*@(?=\s|[;,.)\]}]|$)/g)) {
             const token = trailingAt[0];
-
             issues.push({
                 line: lineNumber,
                 type: "INVALID TOKEN",
                 message: `The token "${token}" contains an unexpected symbol.`,
                 token,
-                replacement: token.replace("@", "")
+                replacement: token.replace("@", ""),
+                offset: lineOffset + trailingAt.index
             });
         }
 
-        const numberMatch = line.match(/\b\d+\.\d+\.\d+\b/);
-
-        if (numberMatch) {
+        for (const numberMatch of line.matchAll(/\b\d+\.\d+\.\d+\b/g)) {
             const token = numberMatch[0];
-
             issues.push({
                 line: lineNumber,
                 type: "MALFORMED NUMBER",
                 message: `The numeric literal "${token}" contains multiple decimal points.`,
                 token,
-                replacement: token.split(".").slice(0, 2).join(".")
+                replacement: token.split(".").slice(0, 2).join("."),
+                offset: lineOffset + numberMatch.index
             });
         }
 
-        const unsupportedMatch = line.match(/[^\w\s"'`.,;:{}()[\]<>+\-*\/=%!&|?$#@\\]/);
-
-        if (unsupportedMatch) {
+        for (const unsupportedMatch of line.matchAll(/[^\w\s"'`.,;:{}()[\]<>+\-*\/=%!&|?$#@\\]/g)) {
             const token = unsupportedMatch[0];
-
             issues.push({
                 line: lineNumber,
                 type: "INVALID CHARACTER",
                 message: `The character "${token}" may not belong to the supported lexical alphabet.`,
                 token,
-                replacement: ""
+                replacement: "",
+                offset: lineOffset + unsupportedMatch.index
             });
         }
 
-        if (/[;,:+\-*\/=]\s*[;,:+\-*\/=]/.test(line)) {
-            const duplicate = line.match(/([;,:+\-*\/=])\1+/);
-
-            if (duplicate) {
-                issues.push({
-                    line: lineNumber,
-                    type: "SUSPICIOUS TOKEN",
-                    message: `Repeated operator "${duplicate[0]}" may represent a malformed token.`,
-                    token: duplicate[0],
-                    replacement: duplicate[1]
-                });
-            }
+        for (const duplicate of line.matchAll(/([;,:+\-*\/=])\1+/g)) {
+            issues.push({
+                line: lineNumber,
+                type: "SUSPICIOUS TOKEN",
+                message: `Repeated operator "${duplicate[0]}" may represent a malformed token.`,
+                token: duplicate[0],
+                replacement: duplicate[1],
+                offset: lineOffset + duplicate.index
+            });
         }
     });
 
@@ -517,7 +515,7 @@ function removeDuplicateIssues(issues) {
     const seen = new Set();
 
     return issues.filter(issue => {
-        const key = `${issue.line}-${issue.type}-${issue.token}`;
+        const key = `${issue.line}-${issue.type}-${issue.token}-${issue.offset ?? ""}`;
 
         if (seen.has(key)) {
             return false;
@@ -985,9 +983,15 @@ function finishAnalysis(language, code) {
 
         correctionReady = true;
         document.getElementById("applyButton").disabled = false;
+        const canApplyAll = detectedIssues.length > 2;
+        document.getElementById("applyAllButton").hidden = !canApplyAll;
+        document.getElementById("applyAllButton").disabled = !canApplyAll;
+        document.getElementById("applyAllButton").innerHTML =
+            `Correct Entire Code (${detectedIssues.length}) <span>↗</span>`;
+        document.getElementById("batchCorrectionHint").hidden = !canApplyAll;
         document.getElementById("repairAndBuildButton").disabled = false;
         document.getElementById("repairAndBuildButton").textContent =
-            "Click here to correct the code";
+            "Apply selected line correction";
         document.getElementById("correctionStatus").textContent = "READY";
 
         addLog(`${detectedIssues.length} source issue${detectedIssues.length > 1 ? "s" : ""} detected.`);
@@ -996,6 +1000,9 @@ function finishAnalysis(language, code) {
         correctionReady = false;
 
         document.getElementById("applyButton").disabled = true;
+        document.getElementById("applyAllButton").disabled = true;
+        document.getElementById("applyAllButton").hidden = true;
+        document.getElementById("batchCorrectionHint").hidden = true;
         document.getElementById("repairAndBuildButton").disabled = true;
         document.getElementById("correctionStatus").textContent = "CLEAN";
 
@@ -1054,6 +1061,8 @@ function selectIssue(index) {
     renderCorrection(selectedIssue);
     correctionReady = true;
     document.getElementById("applyButton").disabled = false;
+    document.getElementById("applyButton").innerHTML =
+        `Apply Line ${selectedIssue.line} &amp; Recheck <span>↗</span>`;
 }
 
 function renderContext(issue) {
@@ -1111,43 +1120,98 @@ function applyCorrection() {
         return;
     }
 
-    if (selectedIssue.append) {
-        editor.value += selectedIssue.replacement;
-    } else if (Number.isInteger(selectedIssue.offset)) {
-        editor.value =
-            editor.value.slice(0, selectedIssue.offset) +
-            selectedIssue.replacement +
-            editor.value.slice(selectedIssue.offset + selectedIssue.token.length);
-    } else {
-        const lines = editor.value.split("\n");
-        const index = selectedIssue.line - 1;
-
-        if (index < 0 || index >= lines.length) {
-            showToast("The selected issue is no longer in the source");
-            return;
-        }
-
-        const correctedLine = lines[index].replace(
-            selectedIssue.token,
-            selectedIssue.replacement
-        );
-
-        if (correctedLine === lines[index]) {
-            showToast("The selected issue could not be corrected");
-            return;
-        }
-
-        lines[index] = correctedLine;
-        editor.value = lines.join("\n");
+    const correctedLine = selectedIssue.line;
+    const correctedSource = applyIssueCorrections(editor.value, [selectedIssue]);
+    if (correctedSource === null) {
+        showToast("The selected suggestion could not be applied safely");
+        return;
     }
 
-    const correctedLine = selectedIssue.line;
+    editor.value = correctedSource;
     updateEditor();
+    correctionReady = false;
+    document.getElementById("applyButton").disabled = true;
+    document.getElementById("applyAllButton").disabled = true;
     addLog(`Suggested correction applied near line ${correctedLine}.`);
 
     setTimeout(() => {
         analyzeCode();
     }, 400);
+}
+
+function applyAllCorrections() {
+    if (detectedIssues.length <= 2 || !correctionReady) {
+        return;
+    }
+
+    const correctedSource = applyIssueCorrections(editor.value, detectedIssues);
+    if (correctedSource === null) {
+        showToast("Some suggestions overlap or no longer match the source");
+        return;
+    }
+
+    editor.value = correctedSource;
+    updateEditor();
+    correctionReady = false;
+    document.getElementById("applyButton").disabled = true;
+    document.getElementById("applyAllButton").disabled = true;
+    addLog(`${detectedIssues.length} suggested corrections applied across the source.`);
+    showToast("All suggested corrections applied — rechecking source");
+
+    setTimeout(() => {
+        analyzeCode();
+    }, 400);
+}
+
+function applyIssueCorrections(source, issues) {
+    const lines = source.split("\n");
+    const lineOffsets = [];
+    let sourceOffset = 0;
+    const edits = [];
+    let appended = "";
+
+    lines.forEach(line => {
+        lineOffsets.push(sourceOffset);
+        sourceOffset += line.length + 1;
+    });
+
+    for (const issue of issues) {
+        if (issue.append) {
+            appended += issue.replacement;
+            continue;
+        }
+
+        let offset = issue.offset;
+        if (!Number.isInteger(offset) ||
+            source.slice(offset, offset + issue.token.length) !== issue.token) {
+            const lineIndex = issue.line - 1;
+            if (lineIndex < 0 || lineIndex >= lines.length || !issue.token) {
+                return null;
+            }
+            const tokenIndex = lines[lineIndex].indexOf(issue.token);
+            if (tokenIndex < 0) return null;
+            offset = lineOffsets[lineIndex] + tokenIndex;
+        }
+
+        edits.push({ offset, token: issue.token, replacement: issue.replacement });
+    }
+
+    edits.sort((first, second) => first.offset - second.offset);
+    for (let index = 1; index < edits.length; index += 1) {
+        if (edits[index].offset < edits[index - 1].offset + edits[index - 1].token.length) {
+            return null;
+        }
+    }
+
+    let corrected = source;
+    edits.reverse().forEach(edit => {
+        corrected = corrected.slice(0, edit.offset) +
+            edit.replacement +
+            corrected.slice(edit.offset + edit.token.length);
+    });
+    corrected += appended;
+
+    return corrected === source ? null : corrected;
 }
 
 function activatePipeline(name) {
@@ -1216,6 +1280,11 @@ function clearAnalysis() {
     document.getElementById("issueCount").textContent = "0";
     document.getElementById("correctionStatus").textContent = "PENDING";
     document.getElementById("applyButton").disabled = true;
+    document.getElementById("applyButton").innerHTML =
+        "Apply This Line &amp; Recheck <span>↗</span>";
+    document.getElementById("applyAllButton").disabled = true;
+    document.getElementById("applyAllButton").hidden = true;
+    document.getElementById("batchCorrectionHint").hidden = true;
     document.getElementById("repairAndBuildButton").disabled = true;
     document.getElementById("repairAndBuildButton").hidden = true;
     document.getElementById("repairAndBuildButton").textContent =

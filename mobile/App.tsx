@@ -20,6 +20,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   AnalysisResult,
+  applySuggestedCorrections,
   analyzeSource,
   buildParseTree,
   DEFAULT_CODE,
@@ -338,10 +339,25 @@ export default function App() {
 
   const applySuggestedFix = () => {
     if (!selectedIssue || !analysis) return;
-    const issue = selectedIssue;
-    const updatedCode = issue.append
-      ? `${code}${issue.replacement}`
-      : `${code.slice(0, issue.offset)}${issue.replacement}${code.slice(issue.offset + issue.token.length)}`;
+    const updatedCode = applySuggestedCorrections(code, [selectedIssue]);
+    if (updatedCode === null) {
+      setToast("The selected suggestion could not be applied safely");
+      return;
+    }
+    updateAfterCorrection(updatedCode, "Line correction applied");
+  };
+
+  const applyAllSuggestedFixes = () => {
+    if (!analysis || analysis.issues.length <= 2) return;
+    const updatedCode = applySuggestedCorrections(code, analysis.issues);
+    if (updatedCode === null) {
+      setToast("Some suggestions overlap or no longer match the source");
+      return;
+    }
+    updateAfterCorrection(updatedCode, `${analysis.issues.length} corrections applied`);
+  };
+
+  const updateAfterCorrection = (updatedCode: string, successMessage: string) => {
     if (updatedCode === code) {
       setToast("No suggested edit could be applied");
       return;
@@ -351,7 +367,9 @@ export default function App() {
     setAnalysis(result);
     setSelectedIssueId(result.issues[0]?.id ?? null);
     setSelectedPhase(0);
-    setToast(result.issues.length ? "Fix applied — more issues remain" : "Fix applied and checks passed");
+    setToast(result.issues.length
+      ? `${successMessage} — ${result.issues.length} issue${result.issues.length === 1 ? "" : "s"} remain`
+      : `${successMessage} and checks passed`);
   };
 
   const sendQuestion = (text = question) => {
@@ -585,6 +603,32 @@ export default function App() {
               );
             })}
 
+            {analysis.issues.length > 2 ? renderCard(
+              <>
+                <View style={styles.cardTitleRow}>
+                  <Ionicons name="flash-outline" size={18} color={palette.accent} />
+                  <Text style={[styles.cardTitle, { color: palette.text }]}>Batch correction</Text>
+                </View>
+                <Text style={[styles.bodyCopy, { color: palette.muted }]}>
+                  Apply all {analysis.issues.length} suggested fixes in one pass, then recheck the source. You can still review and fix issues line by line below.
+                </Text>
+                <Pressable
+                  onPress={applyAllSuggestedFixes}
+                  accessibilityRole="button"
+                  style={({ pressed }) => [
+                    styles.primaryButton,
+                    {
+                      backgroundColor: palette.accent,
+                      opacity: pressed ? 0.84 : 1,
+                    },
+                  ]}
+                >
+                  <Ionicons name="checkmark-done-outline" size={19} color="#FFFFFF" />
+                  <Text style={styles.primaryButtonText}>Correct entire code ({analysis.issues.length})</Text>
+                </Pressable>
+              </>,
+            ) : null}
+
             {selectedIssue ? renderCard(
               <>
                 <View style={styles.cardTitleRow}>
@@ -615,7 +659,7 @@ export default function App() {
                 </View>
                 <Pressable onPress={applySuggestedFix} style={[styles.primaryButton, { backgroundColor: palette.accent }]}>
                   <Ionicons name="checkmark-circle-outline" size={19} color="#FFFFFF" />
-                  <Text style={styles.primaryButtonText}>Apply suggestion & recheck</Text>
+                  <Text style={styles.primaryButtonText}>Apply this line & recheck</Text>
                 </Pressable>
               </>,
             ) : null}

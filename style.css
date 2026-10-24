@@ -943,6 +943,46 @@ body::before {
     cursor: not-allowed;
 }
 
+.apply-all-btn {
+    width: 100%;
+    min-height: 43px;
+    margin-top: 9px;
+    padding: 0 14px;
+    border: 1px solid rgba(127,143,255,.3);
+    border-radius: 10px;
+    background: rgba(127,143,255,.12);
+    color: #aeb8ff;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 700;
+    transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+
+.apply-all-btn:hover:not(:disabled) {
+    background: rgba(127,143,255,.2);
+    border-color: rgba(127,143,255,.5);
+    transform: translateY(-1px);
+}
+
+.apply-all-btn:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.apply-all-btn[hidden],
+.batch-correction-hint[hidden] {
+    display: none;
+}
+
+.batch-correction-hint {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-size: 10px;
+    line-height: 1.5;
+    text-align: center;
+}
+
 .agent-panel {
     margin-top: 13px;
 }
