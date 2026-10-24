@@ -348,7 +348,7 @@ export default function App() {
   };
 
   const applyAllSuggestedFixes = () => {
-    if (!analysis || analysis.issues.length <= 2) return;
+    if (!analysis || analysis.issues.length === 0) return;
     const updatedCode = applySuggestedCorrections(code, analysis.issues);
     if (updatedCode === null) {
       setToast("Some suggestions overlap or no longer match the source");
@@ -603,7 +603,7 @@ export default function App() {
               );
             })}
 
-            {analysis.issues.length > 2 ? renderCard(
+            {analysis.issues.length > 0 ? renderCard(
               <>
                 <View style={styles.cardTitleRow}>
                   <Ionicons name="flash-outline" size={18} color={palette.accent} />

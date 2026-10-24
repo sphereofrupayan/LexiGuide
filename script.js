@@ -983,7 +983,7 @@ function finishAnalysis(language, code) {
 
         correctionReady = true;
         document.getElementById("applyButton").disabled = false;
-        const canApplyAll = detectedIssues.length > 2;
+        const canApplyAll = detectedIssues.length > 0;
         document.getElementById("applyAllButton").hidden = !canApplyAll;
         document.getElementById("applyAllButton").disabled = !canApplyAll;
         document.getElementById("applyAllButton").innerHTML =
